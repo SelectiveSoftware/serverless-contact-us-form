@@ -3,6 +3,9 @@ var querystring = require('querystring');
 var AWS = require("aws-sdk");
 
 exports.handler = function (event, context, callback) {
+    // Uncomment when you need a real dump for testing vectors or debug
+    // console.info(JSON.stringify(event));
+
     // Validate the recaptcha
     var input_data = JSON.parse(event.body);
     var postData = querystring.stringify({
@@ -26,6 +29,7 @@ exports.handler = function (event, context, callback) {
         res.on('data', function(chunk) {
             var captchaResponse = JSON.parse(chunk);
             if (captchaResponse.success) {
+                console.info("Succeed to validate reCAPTCHA: ", captchaResponse);
                 var sns = new AWS.SNS();
                 delete input_data['g-recaptcha-response'];
                 var message = "";
@@ -40,7 +44,7 @@ exports.handler = function (event, context, callback) {
                 };
                 sns.publish(params, function (err, response) {
                     if (err) {
-                        console.error("SNS error: ", JSON.stringify(err));
+                        console.error("Failed to send SNS message: ", JSON.stringify(err));
                         callback(null, {
                             statusCode: '500',
                             headers: {
@@ -53,6 +57,7 @@ exports.handler = function (event, context, callback) {
                         });
                         return;
                     }
+                    console.info("Succeed to send SNS message: ", response);
                     callback(null, {
                         statusCode: '200',
                         headers: {
@@ -65,6 +70,7 @@ exports.handler = function (event, context, callback) {
                     });
                 });
             } else {
+                console.info("Failed to validate reCAPTCHA: ", captchaResponse);
                 callback(null, {
                     statusCode: '500',
                     headers: {
@@ -80,6 +86,7 @@ exports.handler = function (event, context, callback) {
     });
 
     req.on('error', function(e) {
+        console.info("Got error on calling Google for reCAPTCHA verification: ", e);
         callback(null, {
             statusCode: '500',
             headers: {
