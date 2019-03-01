@@ -24,6 +24,13 @@ exports.handler = function (event, context, callback) {
         }
     };
 
+    var corsResponseHeaders = {
+        "Access-Control-Allow-Methods" : "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
+        "Access-Control-Allow-Headers" : "Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token",
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+    };
+
     var req = https.request(options, function(res) {
         res.setEncoding('utf8');
         res.on('data', function(chunk) {
@@ -47,12 +54,7 @@ exports.handler = function (event, context, callback) {
                         console.error("Failed to send SNS message: ", JSON.stringify(err));
                         callback(null, {
                             statusCode: '500',
-                            headers: {
-                                "Access-Control-Allow-Methods" : "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
-                                "Access-Control-Allow-Headers" : "Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token",
-                                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-                                "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-                            },
+                            headers: corsResponseHeaders,
                             body: JSON.stringify({message:'Cannot send email'})
                         });
                         return;
@@ -60,12 +62,7 @@ exports.handler = function (event, context, callback) {
                     console.info("Succeed to send SNS message: ", response);
                     callback(null, {
                         statusCode: '200',
-                        headers: {
-                            "Access-Control-Allow-Methods" : "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
-                            "Access-Control-Allow-Headers" : "Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token",
-                            "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-                            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-                        },
+                        headers: corsResponseHeaders,
                         body: JSON.stringify(response)
                     });
                 });
@@ -73,12 +70,7 @@ exports.handler = function (event, context, callback) {
                 console.info("Failed to validate reCAPTCHA: ", captchaResponse);
                 callback(null, {
                     statusCode: '500',
-                    headers: {
-                        "Access-Control-Allow-Methods" : "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
-                        "Access-Control-Allow-Headers" : "Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token",
-                        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-                        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-                    },
+                    headers: corsResponseHeaders,
                     body: JSON.stringify({message:'Invalid recaptcha'})
                 });
             }
@@ -89,12 +81,7 @@ exports.handler = function (event, context, callback) {
         console.info("Got error on calling Google for reCAPTCHA verification: ", e);
         callback(null, {
             statusCode: '500',
-            headers: {
-                "Access-Control-Allow-Methods" : "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
-                "Access-Control-Allow-Headers" : "Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token",
-                "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-                "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-            },
+            headers: corsResponseHeaders,
             body: JSON.stringify({message:e.message})
         });
     });
