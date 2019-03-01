@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Contact page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+      var endpointPostUrl = 'https://YOUR_SERVERLESS_ID.execute-api.eu-west-1.amazonaws.com/YOUR_STAGE';
+
+      function serializeFormJSON(form) {
+        var o = {};
+        var a = form.serializeArray();
+        $.each(a, function() {
+          if (o[this.name]) {
+            if (!o[this.name].push) {
+              o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+          } else {
+            o[this.name] = this.value || '';
+          }
+        });
+        return o;
+      }
+
+      function onSubmitForm() {
+        var formData = JSON.stringify(serializeFormJSON($('#contact-us-form')));
+        console.log('formData');
+        console.log(formData);
+        $.ajax({
+          type: 'POST',
+          url: endpointPostUrl,
+          data: formData,
+          success: function(responseData) {
+            console.log('contactFormEndpoint answer: ', responseData);
+            // {"ResponseMetadata":{"RequestId":"2c1e4a51-6074-5b00-a6d1-1ea252987a7c"},"MessageId":"ba649ce7-f929-5ea8-babc-c814cbc56fd4"}
+          },
+          dataType: 'json',
+          contentType: 'application/json',
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <h3>Contact us!</h3>
+    <form id="contact-us-form">
+      <div class="form-group">
+        <label for="contactUsFormName">Name</label>
+        <input
+          type="text"
+          id="contactUsFormName"
+          className="form-control"
+          name="name"
+          placeholder="Full name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="contactUsFormEmail">Email address</label>
+        <input
+          type="email"
+          id="contactUsFormEmail"
+          className="form-control"
+          name="email"
+          placeholder="Enter email"
+        />
+      </div>
+      <div class="form-group">
+        <label for="contactUsFormPhone">Phone number</label>
+        <input
+          type="text"
+          id="contactUsFormPhone"
+          className="form-control"
+          name="phone"
+          placeholder="Enter phone"
+        />
+      </div>
+      <div class="form-group">
+        <label for="contactUsFormMessage">Message</label>
+        <textarea
+          type="textarea"
+          id="contactUsFormMessage"
+          className="form-control"
+          name="message"
+          placeholder="Enter message"
+        ></textarea>
+      </div>
+
+      <button
+        class="g-recaptcha"
+        data-sitekey="YOUR_RECAPTCHA_SITE_KEY"
+        data-callback="onSubmitForm"
+      >
+        Submit
+      </button>
+    </form>
+  </body>
+</html>
