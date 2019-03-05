@@ -62,8 +62,8 @@ Resources:
         PostEvent:
           Type: Api
           Properties:
-            Path: /
-            Method: post
+            Path: /contactus
+            Method: POST
       Environment:
         Variables:
           ReCaptchaSecret: !Ref ReCaptchaSecret
