@@ -6,9 +6,8 @@ Description: Serverless Contact Us form for static website
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
-      -
-        Label:
-          default: "Configuration"
+      - Label:
+          default: 'Configuration'
         Parameters:
           - Subject
           - ToEmailAddress
@@ -35,7 +34,6 @@ Globals:
       AllowOrigin: "'*'"
 
 Resources:
-
   #
   # SNS Topic
   #
