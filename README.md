@@ -33,10 +33,25 @@ python3 -m http.server
 
 - Update the endpoint URL with your own value:
 
-  - `var endpointPostUrl = 'https://YOUR_SERVERLESS_ID.execute-api.eu-west-1.amazonaws.com/YOUR_STAGE';`
+  - `var endpointPostUrl = 'https://YOUR_SERVERLESS_ID.execute-api.eu-west-1.amazonaws.com/YOUR_STAGE/YOUR_PATH';`
 
 - Update the Google-reCAPTCHA site key with your own value:
 
   - `data-sitekey="YOUR_RECAPTCHA_SITE_KEY"``
 
 - Navigate to [./samples/contact.html](./samples/contact.html)
+
+## Debug the lambda
+
+In AWS lambda console, you can select "configure test events", and copy/paste the content of the file `./sample.test.request.json` in the textbox, then click the 'Test' button.
+The lambda should fails with an "invalid recaptcha" message: Feel free to add a valid recaptcha response (at the end of the file, in the `body` field) or to change your code temporaly for debugging.
+
+**Note:**
+
+- The JSON really sent by the client is in the `body` field (at the bottom of the sample file)
+- This sample file contains a lot of other attributes because POST method created as an implicit `AWS_PROWY` integration type. In a regular cloudformation template (without SAM), the method would have this attribute:
+
+```yaml
+Integration:
+  Type: AWS_PROXY
+```
