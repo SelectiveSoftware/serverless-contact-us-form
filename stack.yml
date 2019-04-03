@@ -29,8 +29,8 @@ Globals:
     # to make more specific to your own website, change the origin wildcard
     # to a particular domain name, e.g. "'www.example.com'"
     Cors:
-      AllowMethods: "'*'"
-      AllowHeaders: "'*'"
+      AllowMethods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+      AllowHeaders: "'Accept,Accept-Version,Authorization,Cache-Control,Content-MD5,Content-Type,CSRF-Token,X-Amz-Date,X-Api-Key,X-Amz-Security-Token,X-Requested-With'"
       AllowOrigin: "'*'"
 
 Resources:
